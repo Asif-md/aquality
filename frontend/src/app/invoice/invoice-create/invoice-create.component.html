@@ -1,0 +1,215 @@
+<div class="content-wrapper" style="height: 3000px;">
+  <section class=" content-header ">
+    <div class="col-xs-12">
+      <h1>
+        Create New Invoice
+      </h1>
+      <ol class="breadcrumb ">
+        <li><a [routerLink]="[ '/dashboard/home' ] "><i class="fa fa-dashboard "></i> Sofkul</a></li>
+        <li><a [routerLink]="[ '/dashboard/invoice/create' ] "><i class="fa fa-dashboard "></i> Invoice</a></li>
+        <li class="active ">Create</li>
+      </ol>
+    </div>
+  </section>
+  <section class="content ">
+    <div class="col-md-12">
+      <div class="box box-primary" style="height:2000px">
+        <div class="alert alert-success" role="alert" *ngIf="showSuccess">New Invoice Created Successfully !!</div>
+        <div class="alert alert-danger" role="alert" *ngIf="showError">ERROR !! Please Try Again.</div>
+        <!--  Page Content Here -->
+        <br>
+        <!--customer list-->
+        <form class="form-horizontal ">
+          <div class="col-md-12">
+            <div class=" form-group ">
+              <label class="col-sm-2 control-label ">Choose Customer: </label>
+              <div class="col-sm-10 ">
+                <div>
+                  <select required *ngIf="customerList" class="form-control" (change)="getCustomer($event)">
+                    <option *ngFor="let customer of customerList" value="{{ customer._id }}">
+                      <strong> {{ customer.username }} </strong> - <em> {{ customer.fullname }} </em>
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <br><br>
+        </form>
+
+
+        <form class="form-horizontal " style="margin-top:30px" [formGroup]="invoiceCreateForm"
+              (submit)="submitInvoiceCreateForm()">
+          <div class="col-md-12" *ngIf="resCustomer">
+            <!--username-->
+            <div class=" form-group ">
+              <label for="username " class="col-sm-2 control-label ">Username</label>
+              <div class="col-sm-10 ">
+                <input formControlName="username" type="text " class="form-control " id="username "
+                       placeholder="Username " readonly>
+              </div>
+            </div>
+            <!--email-->
+            <div class="form-group ">
+              <label for="email " class="col-sm-2 control-label ">Email</label>
+              <div class="col-sm-10 ">
+                <input formControlName="email" type="email " class="form-control " id="email " placeholder="Email "
+                       readonly>
+              </div>
+            </div>
+            <!--fullname-->
+            <div class="form-group ">
+              <label for="fullname " class="col-sm-2 control-label ">Fullname</label>
+              <div class="col-sm-10 ">
+                <input formControlName="fullname" type="text " class="form-control " id="fullname "
+                       placeholder="Fullname " readonly>
+              </div>
+            </div>
+
+            <!--mobile_primary-->
+            <div class="form-group ">
+              <label for="mobile_primary " class="col-sm-2 control-label ">Mobile Primary</label>
+              <div class="col-sm-10 ">
+                <input formControlName="mobile_primary" type="text " class="form-control " id="mobile_primary "
+                       placeholder="Mobile primary " readonly>
+              </div>
+            </div>
+
+            <!--mobile_secondary-->
+            <div class="form-group ">
+              <label for="mobile_secondary " class="col-sm-2 control-label ">Mobile Secondary</label>
+              <div class="col-sm-10 ">
+                <input formControlName="mobile_secondary" type="text " class="form-control " id="mobile_secondary "
+                       placeholder="Mobile secondary " readonly>
+              </div>
+            </div>
+
+            <!--location-->
+            <div class="form-group ">
+              <label for="location " class="col-sm-2 control-label ">Location</label>
+              <div class="col-sm-10">
+                <input type="text " formControlName="location" class="form-control " id="location "
+                       placeholder="location " readonly>
+              </div>
+            </div>
+
+            <!--area-->
+            <div class="form-group ">
+              <label for="area " class="col-sm-2 control-label ">Area</label>
+              <div class="col-sm-10">
+                <input type="text " formControlName="area" class="form-control " id="area " placeholder="area "
+                       readonly>
+              </div>
+            </div>
+
+            <!--city-->
+            <div class="form-group ">
+              <label for="city " class="col-sm-2 control-label ">City</label>
+              <div class="col-sm-10">
+                <input type="text " formControlName="city" class="form-control " id="city " placeholder="city "
+                       >
+              </div>
+            </div>
+        
+
+            <div class="form-group ">
+              <label for="status" class="col-sm-2 control-label ">Status</label>
+              <div class="col-sm-10">
+                <label class="label label-danger">Due</label>
+              </div>
+            </div>
+            <br>
+
+            
+
+            <!--invoice_created_date-->
+            <div class="form-group">
+              <label for="date" class="col-sm-2 control-label">Invoice Date</label>
+              <div class="col-sm-10">
+                <input type="date" formControlName="date">
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="col-sm-2 control-label ">Remarks</label>
+                <div class="col-sm-10 ">
+                  <textarea formControlName="description" class="form-control"></textarea>
+                </div>
+              </div>
+
+            <!--total amount-->
+            <div class="form-group ">
+              <label for="amount_due_minus_discount " class="col-sm-2 control-label ">Total (INR)</label>
+              <div class="col-sm-10">
+                <input type="number " formControlName="total" class="form-control " id="amount_due_minus_discount "
+                       placeholder="total "
+                       readonly>
+              </div>
+            </div>
+
+            <!--discount-->
+            <div class="form-group ">
+            <label for="discount " class="col-sm-2 control-label ">Adjustments</label>
+            <div class="col-sm-10">
+            <input type="number " (keyup)="updateDiscount($event.target.value)" formControlName="discount"
+            class="form-control " id="discount " placeholder="discount">
+            </div>
+            </div>
+            <!--product list-->
+            <div class="form-group row " *ngFor="let item of createRange(allProductCounter);let i=index">
+              <label class="col-sm-2 control-label ">Product [{{ i+1 }}]</label>
+              <div class="col-sm-10 ">
+                <div class="productSelectBox">
+                  <select required *ngIf="productList" class="form-control" (change)="onProductChange($event,i)">
+                    <option *ngFor="let product of productList" value="{{ product._id }}">
+                      {{ product.name }} - <em> {{ product.rate }} INR/month </em>
+                    </option>
+                  </select>
+                  <button *ngIf="i>0" type="button" class="pull-right btn btn-danger btn-xs" (click)="removeProduct(i)">
+                    <i
+                      class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+              
+            </div>
+            <!--<div class="col-sm-4 pull-right">
+                <div class="form-group ">
+                    <label for="quantity " class="col-sm-2 control-label ">Quantity</label>
+                    <div class="col-sm-10">
+                      <input type="number " formControlName="quantity"  class="form-control " id="quantity " 
+                             placeholder="enter quantity">
+                    </div>
+                  </div>
+                  </div>-->
+            
+
+
+            <button (click)="addProduct()" type="button" class="pull-right btn btn-success"><i class="fa fa-plus"
+                                                                                               aria-hidden="true"></i>
+              &nbsp; Add Product
+            </button>
+
+            <div class="form-group ">
+              <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-success btn-lg">Save</button>
+                <button type="button" class="btn btn-danger btn-lg">Cancel</button>
+
+              </div>
+            </div>
+          </div>
+          <br>
+          <br>
+          <hr>
+          <div class="col-md-12" *ngIf="isSaved">
+            <div class="alert alert-success" role="alert">Invoice Created Successfully !!</div>
+            <a class="btn btn-lg btn-info" [routerLink]="['/dashboard/invoice/display/all/',resultInvoice._id]">Generate Invoice Now</a>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+</div>
